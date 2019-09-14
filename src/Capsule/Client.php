@@ -20,21 +20,10 @@ final class Client extends MongoClient
     /** @var string */
     private $clientName;
 
-    /**
-     * Client constructor.
-     *
-     * @param string $uri
-     * @param array $uriOptions
-     * @param array $driverOptions
-     * @param string $clientName
-     * @param EventDispatcherInterface $eventDispatcher
-     *
-     * @internal param DataCollectorLoggerInterface $logger
-     */
     public function __construct(
-        $uri = 'mongodb://localhost:27017',
-        array $uriOptions = [],
-        array $driverOptions = [],
+        string $uri,
+        array $uriOptions,
+        array $driverOptions,
         string $clientName,
         EventDispatcherInterface $eventDispatcher
     ) {
