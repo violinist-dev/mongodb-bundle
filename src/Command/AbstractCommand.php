@@ -28,8 +28,6 @@ abstract class AbstractCommand extends Command
 
     /**
      * AbstractCommand constructor.
-     *
-     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container, string $name = null)
     {

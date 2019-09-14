@@ -28,12 +28,6 @@ final class ClientConfiguration
 
     /**
      * ClientConfiguration constructor.
-     *
-     * @param string      $uri
-     * @param string      $username
-     * @param string      $password
-     * @param string|null $authSource
-     * @param array       $options
      */
     public function __construct(
         string $uri,
@@ -49,25 +43,16 @@ final class ClientConfiguration
         $this->authSource = $authSource;
     }
 
-    /**
-     * @return string
-     */
     public function getUri(): string
     {
         return $this->uri;
     }
 
-    /**
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -81,9 +66,6 @@ final class ClientConfiguration
         return $this->authSource;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->cleanOptions(
@@ -97,11 +79,6 @@ final class ClientConfiguration
         );
     }
 
-    /**
-     * @param array $options
-     *
-     * @return array
-     */
     private function cleanOptions(array $options): array
     {
         return array_filter(

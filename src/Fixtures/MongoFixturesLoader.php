@@ -20,8 +20,6 @@ final class MongoFixturesLoader
     }
 
     /**
-     * @param string $dir
-     *
      * @return array
      */
     public function loadFromDirectory(string $dir)
@@ -39,8 +37,6 @@ final class MongoFixturesLoader
     }
 
     /**
-     * @param \Iterator $iterator
-     *
      * @return array
      */
     private function loadFromIterator(\Iterator $iterator)
@@ -78,11 +74,6 @@ final class MongoFixturesLoader
         );
     }
 
-    /**
-     * @param mixed $instance
-     *
-     * @return MongoFixtureInterface
-     */
     private function buildFixture($instance): MongoFixtureInterface
     {
         if ($instance instanceof AbstractContainerAwareFixture) {
@@ -92,9 +83,6 @@ final class MongoFixturesLoader
         return $instance;
     }
 
-    /**
-     * @param MongoFixtureInterface $list
-     */
     public function addInstance(MongoFixtureInterface $list)
     {
         $listClass = \get_class($list);
@@ -105,8 +93,6 @@ final class MongoFixturesLoader
     }
 
     /**
-     * @param string $fileName
-     *
      * @return array
      */
     public function loadFromFile(string $fileName)

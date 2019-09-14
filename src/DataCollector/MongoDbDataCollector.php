@@ -43,9 +43,6 @@ class MongoDbDataCollector extends DataCollector
         ];
     }
 
-    /**
-     * @param DataCollectorLoggerInterface $logger
-     */
     public function setLogger(DataCollectorLoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -69,9 +66,6 @@ class MongoDbDataCollector extends DataCollector
         $this->data[self::CONNECTION_KEYWORD] = $this->logger->getConnections();
     }
 
-    /**
-     * @return int
-     */
     public function getQueryCount(): int
     {
         return \count($this->data[self::QUERY_KEYWORD]);
@@ -85,17 +79,11 @@ class MongoDbDataCollector extends DataCollector
         return $this->data[self::QUERY_KEYWORD];
     }
 
-    /**
-     * @return float
-     */
     public function getTime(): float
     {
         return (float) ($this->data[self::TIME_KEYWORD] * 1000);
     }
 
-    /**
-     * @return int
-     */
     public function getConnectionsCount(): int
     {
         return \count($this->data[self::CONNECTION_KEYWORD]);

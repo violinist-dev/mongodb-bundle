@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MongoBundle\Tests\unit\Models;
+namespace Facile\MongoDbBundle\Tests\Unit\Models;
 
 use Facile\MongoDbBundle\Models\ClientConfiguration;
 use PHPUnit\Framework\TestCase;
@@ -50,9 +50,6 @@ class ClientConfigurationTest extends TestCase
     }
 
     /**
-     * @param array $options
-     * @param array $expectedOptions
-     *
      * @dataProvider optionsDataProvider
      */
     public function test_construction_with_options(array $options, array $expectedOptions)

@@ -1,9 +1,5 @@
 <?php
 
-use Facile\CodingStandards\Rules\ArrayRulesProvider;
-use Facile\CodingStandards\Rules\CompositeRulesProvider;
-use Facile\CodingStandards\Rules\DefaultRulesProvider;
-
 $config = require __DIR__ . '/.php_cs.dist';
 
 $additionalRules = [
@@ -11,7 +7,8 @@ $additionalRules = [
     'blank_line_after_opening_tag' => false,
     'class_attributes_separation' => [
         'elements' => ['method']
-    ]
+    ],
+    'no_superfluous_phpdoc_tags' => true,
 ];
 
 $rulesProvider = new Facile\CodingStandards\Rules\CompositeRulesProvider([

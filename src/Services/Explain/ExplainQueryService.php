@@ -37,8 +37,6 @@ class ExplainQueryService
      * verbosity : queryPlanner | executionStats Mode | allPlansExecution (default)
      * The explain command provides information on the execution of the following commands:
      * count, distinct, group, find, findAndModify, delete, and update.
-     *
-     * @param ClientRegistry $clientRegistry
      */
     public function __construct(ClientRegistry $clientRegistry)
     {
@@ -48,12 +46,8 @@ class ExplainQueryService
     /**
      * Execute the operation.
      *
-     * @param Query $query
-     * @param string $verbosity
      *
      * @throws \Exception
-     *
-     * @return Cursor
      */
     public function execute(Query $query, string $verbosity = self::VERBOSITY_ALL_PLAN_EXECUTION): Cursor
     {

@@ -66,9 +66,6 @@ class LoadFixturesCommand extends AbstractCommand
         $this->io->writeln(sprintf('Done, loaded %d fixtures files', \count($fixtures)));
     }
 
-    /**
-     * @param MongoFixtureInterface $indexList
-     */
     private function loadFixture(MongoFixtureInterface $indexList)
     {
         $indexList->loadData();
