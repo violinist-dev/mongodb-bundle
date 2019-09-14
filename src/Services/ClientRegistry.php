@@ -30,14 +30,6 @@ final class ClientRegistry
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
-    /**
-     * ClientRegistry constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param bool                   $debug
-     *
-     * @internal param DataCollectorLoggerInterface $logger
-     */
     public function __construct(EventDispatcherInterface $eventDispatcher, bool $debug)
     {
         $this->clients = [];
@@ -46,34 +38,22 @@ final class ClientRegistry
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param array $configurations
-     */
-    public function addClientsConfigurations(array $configurations)
+    public function addClientsConfigurations(array $configurations): void
     {
         foreach ($configurations as $name => $conf) {
             $this->addClientConfiguration($name, $conf);
         }
     }
 
-    /**
-     * @param string $name
-     * @param array  $conf
-     */
-    private function addClientConfiguration(string $name, array $conf)
+    private function addClientConfiguration(string $name, array $conf): void
     {
         $this->configurations[$name] = $this->buildClientConfiguration($conf);
     }
 
-    /**
-     * @param array $conf
-     *
-     * @return ClientConfiguration
-     */
     private function buildClientConfiguration(array $conf): ClientConfiguration
     {
         if (! $conf['uri']) {
-            $conf['uri'] = $this->buildConnectionUri($conf['hosts']);
+            $conf['uri'] = self::buildConnectionUri($conf['hosts']);
         }
 
         return new ClientConfiguration(
@@ -90,17 +70,12 @@ final class ClientRegistry
         );
     }
 
-    /**
-     * @param array $hosts
-     *
-     * @return string
-     */
-    private function buildConnectionUri(array $hosts): string
+    private static function buildConnectionUri(array $hosts): string
     {
         return 'mongodb://' . implode(
             ',',
             array_map(
-                function (array $host) {
+                static function (array $host) {
                     return sprintf('%s:%d', $host['host'], $host['port']);
                 },
                 $hosts
@@ -108,31 +83,16 @@ final class ClientRegistry
         );
     }
 
-    /**
-     * @param string $name
-     * @param string $databaseName
-     *
-     * @return Client
-     */
     public function getClientForDatabase(string $name, string $databaseName): Client
     {
         return $this->getClient($name, $databaseName);
     }
 
-    /**
-     * @return array
-     */
     public function getClientNames(): array
     {
         return array_keys($this->clients);
     }
 
-    /**
-     * @param string $name
-     * @param string $databaseName
-     *
-     * @return Client
-     */
     public function getClient(string $name, string $databaseName = null): Client
     {
         $clientKey = null !== $databaseName ? $name . '.' . $databaseName : $name;
@@ -149,11 +109,7 @@ final class ClientRegistry
             $this->clients[$clientKey] = $this->buildClient($name, $conf->getUri(), $options, []);
 
             $event = new ConnectionEvent($clientKey);
-            if (class_exists(LegacyEventDispatcherProxy::class)) {
-                $this->eventDispatcher->dispatch($event, ConnectionEvent::CLIENT_CREATED);
-            } else {
-                $this->eventDispatcher->dispatch(ConnectionEvent::CLIENT_CREATED, $event);
-            }
+            $this->eventDispatcher->dispatch(ConnectionEvent::CLIENT_CREATED, $event);
         }
 
         return $this->clients[$clientKey];
