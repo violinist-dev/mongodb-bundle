@@ -7,6 +7,7 @@ namespace Facile\MongoDbBundle\Services;
 use Facile\MongoDbBundle\Capsule\Client as BundleClient;
 use Facile\MongoDbBundle\Event\ConnectionEvent;
 use Facile\MongoDbBundle\Models\ClientConfiguration;
+use Facile\MongoDbBundle\Utils\AntiDeprecationUtils;
 use MongoDB\Client;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -108,7 +109,12 @@ final class ClientRegistry
             $this->clients[$clientKey] = $this->buildClient($name, $conf->getUri(), $options, []);
 
             $event = new ConnectionEvent($clientKey);
-            $this->eventDispatcher->dispatch(ConnectionEvent::CLIENT_CREATED, $event);
+
+            AntiDeprecationUtils::safeDispatch(
+                $this->eventDispatcher,
+                ConnectionEvent::CLIENT_CREATED,
+                $event
+            );
         }
 
         return $this->clients[$clientKey];
