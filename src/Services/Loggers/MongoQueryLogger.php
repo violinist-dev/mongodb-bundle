@@ -11,7 +11,7 @@ class MongoQueryLogger implements DataCollectorLoggerInterface
     /** @var \SplQueue|Query[] */
     private $logs;
 
-    /** @var array|string[] */
+    /** @var string[] */
     private $connections;
 
     /**
@@ -32,7 +32,7 @@ class MongoQueryLogger implements DataCollectorLoggerInterface
     }
 
     /**
-     * @return array|\string[]
+     * @return string[]
      */
     public function getConnections(): array
     {
