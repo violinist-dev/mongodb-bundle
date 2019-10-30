@@ -17,18 +17,12 @@ final class ConnectionEvent extends GenericEvent
 
     /**
      * ConnectionEvent constructor.
-     *
-     * @param string $clientName
-     * @param array $arguments
      */
     public function __construct(string $clientName, array $arguments = [])
     {
         parent::__construct($clientName, $arguments);
     }
 
-    /**
-     * @return string
-     */
     public function getClientName(): string
     {
         return $this->getSubject();

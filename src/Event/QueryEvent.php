@@ -20,18 +20,12 @@ final class QueryEvent extends GenericEvent
 
     /**
      * QueryEvent constructor.
-     *
-     * @param Query $queryLog
-     * @param array $arguments
      */
     public function __construct(Query $queryLog, array $arguments = [])
     {
         parent::__construct($queryLog, $arguments);
     }
 
-    /**
-     * @return Query
-     */
     public function getQueryLog(): Query
     {
         return $this->getSubject();

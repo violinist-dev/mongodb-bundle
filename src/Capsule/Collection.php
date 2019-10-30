@@ -187,12 +187,8 @@ final class Collection extends MongoCollection
     }
 
     /**
-     * @param string $method
      * @param array|object $filters
      * @param array|object $data
-     * @param array $options
-     *
-     * @return Query
      */
     private function prepareQuery(string $method, $filters = null, $data = null, array $options): Query
     {
@@ -217,11 +213,6 @@ final class Collection extends MongoCollection
         return $query;
     }
 
-    /**
-     * @param ReadPreference $readPreference
-     *
-     * @return string
-     */
     private function translateReadPreference(ReadPreference $readPreference): string
     {
         switch ($readPreference->getMode()) {
@@ -240,9 +231,6 @@ final class Collection extends MongoCollection
         }
     }
 
-    /**
-     * @param Query $queryLog
-     */
     private function notifyQueryExecution(Query $queryLog)
     {
         $queryLog->setExecutionTime(microtime(true) - $queryLog->getStart());
@@ -254,17 +242,11 @@ final class Collection extends MongoCollection
         );
     }
 
-    /**
-     * @return string
-     */
     public function getClientName(): string
     {
         return $this->clientName;
     }
 
-    /**
-     * @return string
-     */
     public function getDatabaseName(): string
     {
         return $this->databaseName;
