@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\MongoDbBundle\Controller;
 
+use Facile\MongoDbBundle\DataCollector\MongoDbDataCollector;
 use Facile\MongoDbBundle\DataCollector\MongoQuerySerializer;
 use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\DependencyInjection\Container;
@@ -16,32 +17,21 @@ class ProfilerController implements ContainerAwareInterface
     /** @var Container */
     private $container;
 
-    /**
-     * Sets the container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
-    /**
-     * @param $token
-     * @param $queryNumber
-     *
-     * @throws \Exception
-     *
-     * @return JsonResponse
-     */
-    public function explainAction($token, $queryNumber)
+    public function explainAction($token, $queryNumber): JsonResponse
     {
-        /** @var $profiler \Symfony\Component\HttpKernel\Profiler\Profiler */
+        /** @var \Symfony\Component\HttpKernel\Profiler\Profiler */
         $profiler = $this->container->get('profiler');
         $profiler->disable();
 
         $profile = $profiler->loadProfile($token);
-        $queries = $profile->getCollector('mongodb')->getQueries();
+        /** @var MongoDbDataCollector $dataCollector */
+        $dataCollector = $profile->getCollector('mongodb');
+        $queries = $dataCollector->getQueries();
 
         $query = $queries[$queryNumber];
 

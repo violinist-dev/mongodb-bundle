@@ -8,9 +8,6 @@ use Facile\MongoDbBundle\Models\Query;
 
 class ExplainCommandBuilder
 {
-    /**
-     * @throws \Exception
-     */
     public static function createCommandArgs(
         Query $query,
         string $verbosity = ExplainQueryService::VERBOSITY_ALL_PLAN_EXECUTION
@@ -38,9 +35,6 @@ class ExplainCommandBuilder
         ];
     }
 
-    /**
-     * @param       $args
-     */
     private static function manageCount(Query $query, array $args): array
     {
         if ('count' === $query->getMethod()) {
@@ -56,9 +50,6 @@ class ExplainCommandBuilder
         return $args;
     }
 
-    /**
-     * @param       $args
-     */
     private static function manageDistinct(Query $query, array $args): array
     {
         if ('distinct' === $query->getMethod()) {

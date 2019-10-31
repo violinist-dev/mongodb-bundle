@@ -2,6 +2,8 @@
 
 namespace Facile\MongoDbBundle\DependencyInjection;
 
+use Facile\MongoDbBundle\Utils\AntiDeprecationUtils;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -15,24 +17,27 @@ final class Configuration implements ConfigurationInterface
 {
     const READ_PREFERENCE_VALID_OPTIONS = ['primary', 'primaryPreferred', 'secondary', 'secondaryPreferred', 'nearest'];
 
+    const K_mongoDbBundle = 'mongo_db_bundle';
+
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('mongo_db_bundle');
-        $rootBuilder = \method_exists(TreeBuilder::class, 'getRootNode')
-            ? $treeBuilder->getRootNode()
-            : $treeBuilder->root('mongo_db_bundle');
+        $treeBuilder = new TreeBuilder(self::K_mongoDbBundle);
+        $rootBuilder = AntiDeprecationUtils::rootNode(
+            $treeBuilder,
+            self::K_mongoDbBundle
+        );
 
-        $this->addDataCollection($rootBuilder->children());
-        $this->addClients($rootBuilder->children());
-        $this->addConnections($rootBuilder->children());
+        self::addDataCollection($rootBuilder->children());
+        self::addClients($rootBuilder->children());
+        self::addConnections($rootBuilder->children());
 
         return $treeBuilder;
     }
 
-    private function addDataCollection(NodeBuilder $builder)
+    private static function addDataCollection(NodeBuilder $builder): void
     {
         $builder
             ->booleanNode('data_collection')
@@ -40,89 +45,95 @@ final class Configuration implements ConfigurationInterface
             ->info('Disables Data Collection if needed');
     }
 
-    private function addClients(NodeBuilder $builder)
+    private static function addClients(NodeBuilder $builder): void
     {
+        /** @var ArrayNodeDefinition $clientsBuilder */
         $clientsBuilder = $builder
             ->arrayNode('clients')
             ->isRequired()
             ->requiresAtLeastOneElement()
             ->useAttributeAsKey('name')
-            ->prototype('array')
-            ->children();
+            ->prototype('array');
 
-        $this->addClientsHosts($clientsBuilder);
+        $nodeBuilder = $clientsBuilder->children();
 
-        $clientsBuilder
+        self::addClientsHosts($nodeBuilder);
+
+        $nodeBuilder
             ->scalarNode('uri')
             ->defaultNull()
             ->info('Overrides hosts configuration');
 
-        $clientsBuilder
+        $nodeBuilder
             ->scalarNode('username')
             ->defaultValue('');
 
-        $clientsBuilder
+        $nodeBuilder
             ->scalarNode('password')
             ->defaultValue('');
 
-        $clientsBuilder
+        $nodeBuilder
             ->scalarNode('authSource')
             ->defaultNull()
             ->info('Database name associated with the user’s credentials');
 
-        $clientsBuilder
+        $nodeBuilder
             ->scalarNode('readPreference')
             ->defaultValue('primaryPreferred')
             ->validate()
             ->ifNotInArray(self::READ_PREFERENCE_VALID_OPTIONS)
             ->thenInvalid('Invalid readPreference option %s, must be one of [' . implode(', ', self::READ_PREFERENCE_VALID_OPTIONS) . ']');
 
-        $clientsBuilder
+        $nodeBuilder
             ->scalarNode('replicaSet')
             ->defaultNull();
 
-        $clientsBuilder
+        $nodeBuilder
             ->booleanNode('ssl')
             ->defaultFalse();
 
-        $clientsBuilder
+        $nodeBuilder
             ->integerNode('connectTimeoutMS')
             ->defaultNull();
     }
 
-    private function addClientsHosts(NodeBuilder $builder)
+    private static function addClientsHosts(NodeBuilder $builder): void
     {
+        /** @var ArrayNodeDefinition $hostsBuilder */
         $hostsBuilder = $builder
             ->arrayNode('hosts')
             ->info('Hosts addresses and ports')
-            ->prototype('array')
-            ->children();
+            ->prototype('array');
 
-        $hostsBuilder
+        $nodeBuilder = $hostsBuilder->children();
+
+        $nodeBuilder
             ->scalarNode('host')
             ->isRequired();
 
-        $hostsBuilder
+        $nodeBuilder
             ->integerNode('port')
             ->defaultValue(27017);
     }
 
-    private function addConnections(NodeBuilder $builder)
+    private static function addConnections(NodeBuilder $builder): void
     {
+        /** @var ArrayNodeDefinition $connectionBuilder */
         $connectionBuilder = $builder
             ->arrayNode('connections')
             ->isRequired()
             ->requiresAtLeastOneElement()
             ->useAttributeAsKey('name')
-            ->prototype('array')
-            ->children();
+            ->prototype('array');
 
-        $connectionBuilder
+        $nodeBuilder = $connectionBuilder->children();
+
+        $nodeBuilder
             ->scalarNode('client_name')
             ->isRequired()
             ->info('Desired client name');
 
-        $connectionBuilder
+        $nodeBuilder
             ->scalarNode('database_name')
             ->isRequired()
             ->info('Database name');

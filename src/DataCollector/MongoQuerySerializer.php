@@ -21,12 +21,7 @@ final class MongoQuerySerializer
         $query->setOptions(self::prepareUnserializableData($query->getOptions()));
     }
 
-    /**
-     * @param array|object $data
-     *
-     * @return array|object
-     */
-    private static function prepareUnserializableData($data)
+    private static function prepareUnserializableData($data): array
     {
         if ($data instanceof Serializable) {
             $data = $data->bsonSerialize();

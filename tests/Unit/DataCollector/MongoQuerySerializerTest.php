@@ -13,8 +13,6 @@ use PHPUnit\Framework\TestCase;
 class MongoQuerySerializerTest extends TestCase
 {
     /**
-     * @param $unserializedData
-     *
      * @dataProvider unserializedDataProvider
      */
     public function test_serializer($unserializedData, $expectedSerialization)
@@ -42,8 +40,9 @@ class MongoQuerySerializerTest extends TestCase
         $isoDate = sprintf('ISODate("%sT%s+00:00")', $dateTime->format('Y-m-d'), $dateTime->format('H:i:s'));
 
         // regression: string which is a FQCN of a class that has __toString
-        $documentWithFQCN = new BSONDocument();
-        $documentWithFQCN->fqcn = \Exception::class;
+        $documentWithFQCN = new BSONDocument([
+            'fqcn' => \Exception::class
+        ]);
 
         return [
             [['test' => $date], $isoDate],
